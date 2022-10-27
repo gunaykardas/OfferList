@@ -1,0 +1,63 @@
+﻿@page
+@{
+    ViewData["Title"] = "Details";
+}
+@section head{
+    <link href="~/tabler/css/tabler.min.css" rel="stylesheet" />
+
+    <link href="~/tabler/css/tabler-flags.min.css" rel="stylesheet" />
+    <link href="~/tabler/css/tabler-payments.min.css" rel="stylesheet" />
+    <link href="~/tabler/css/tabler-vendors.min.css" rel="stylesheet" />
+    <link href="~/tabler/css/demo.min.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        $.urlParam = function (name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            return results[1] || 0;
+        }
+        var mt = ["", "Door to Door", "Port to Door", "Door to Port", "Port to Port"];
+
+        $.ajax({
+            type: "GET",
+            url: "https://localhost:7049/Details/" + $.urlParam('id'),
+
+            success: function (data) {
+                if(data=="[]"){
+                    window.location = "/List";
+                };
+                data = JSON.parse(data)[0];
+               console.log(data);
+              $("[data-js='mode']").html(data.Mode);
+                $("[data-js='movementType']").html(mt[data.MovementType]);
+                $("[data-js='incoterm']").html(data.Incoterm ? "Delivered At Place" : "Delivered Duty Paid");
+                $("[data-js='country']").html(data.Country);
+                $("[data-js='city']").html(data.City);
+                $("[data-js='packageType']").html(data.PackageType);
+                $("[data-js='unit1']").html(data.Unit1Value + " " + data.Unit1);
+                $("[data-js='unit2']").html(data.Unit2Value + " " + data.Unit2);
+                $("[data-js='currency']").html(data.Price + " " + data.Currency);
+            }
+        });
+
+
+
+    </script>
+
+
+
+}
+
+    <div class="card">
+
+        <label class="p-3"><b>Mode :</b> <span data-js='mode'></span> </label>
+        <label class="p-3"><b>Movement Type :</b><span data-js='movementType'></span> </label>
+        <label class="p-3"><b>Incoterm : </b> <span data-js='incoterm'></span> </label>
+        <label class="p-3"><b>Country :</b> <span data-js='country'></span> </label>
+        <label class="p-3"><b>City :</b> <span data-js='city'></span> </label>
+        <label class="p-3"><b>Package Type :</b> <span data-js='packageType'></span> </label>
+        <label class="p-3"><b>Unit -1 :</b><span data-js='unit1'></span> </label>
+        <label class="p-3"><b>Unit -2 :</b> <span data-js='unit2'></span> </label>
+        <label class="p-3"><b>Currency :</b> <span data-js='currency'></span> </label>
+
+    </div>
+

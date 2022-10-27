@@ -1,0 +1,484 @@
+﻿@page
+
+@{
+    ViewData["Title"] = "Offer";
+}
+
+@section head{
+    <link href="~/tabler/css/tabler.min.css" rel="stylesheet" />
+
+    <link href="~/tabler/css/tabler-flags.min.css" rel="stylesheet" />
+    <link href="~/tabler/css/tabler-payments.min.css" rel="stylesheet" />
+    <link href="~/tabler/css/tabler-vendors.min.css" rel="stylesheet" />
+    <link href="~/tabler/css/demo.min.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+
+        class Offer {
+            constructor(id, Mode, MovementType, Incoterm, Country, City, PackageType, Unit1, Unit1Value, Unit2, Unit2Value, Currency, Price) {
+                this.id = id;
+                this.Mode = Mode;
+                this.MovementType = MovementType;
+                this.Incoterm = Incoterm;
+                this.Country = Country;
+                this.City = City;
+                this.PackageType = PackageType;
+                this.Unit1 = Unit1;
+                this.Unit1Value = Unit1Value;
+                this.Unit2 = Unit2;
+                this.Unit2Value = Unit2Value;
+                this.Currency = Currency;
+                this.Price = Price;
+            }
+
+
+        }
+
+
+
+
+
+        var countries = [
+            { "id": 1, name: "USA", "cities": ["New York", "Los Angeles", "Miami", "Minnesota"] },
+            { "id": 2, name: "China", "cities": ["Beijing", "Shanghai"] },
+            { "id": 3, name: "Turkey", "cities": ["İstanbul", "İzmir"] }
+        ];
+
+
+
+        function AddOffer() {
+            let _mode = $('input[name=mode]:checked').val();
+            let _movementType = $('input[name=movementType]:checked').val();
+            let _incoterm = $('input[name=incoterm]:checked').val()=="1";
+            let _country = countries.find(x => x.id == $("#select-countries").val()).name;
+            let _city = $("#select-cities").val();
+            let _packageType = $('input[name=packageType]:checked').val();
+            let _unit1 = $('input[name=unit1]:checked').val();
+            let _unit2 = $('input[name=unit2]:checked').val();
+            let _unit1value = $('input[name=unit1value]').val();
+            let _unit2value = $('input[name=unit2value]').val();
+            let _currency = $('#currency').val();
+            let _price = $('input[name=price]').val();
+
+       
+           
+            $.ajax
+                ({
+
+                    type: "POST",
+                    data: JSON.stringify({ id: 0, Mode: _mode, MovementType: _movementType, Incoterm: _incoterm, Country: _country, City: _city, PackageType: _packageType, Unit1: _unit1, Unit1Value: _unit1value, Unit2: _unit2, Unit2Value: _unit2value, Currency: _currency, Price: _price}),
+                    url: "https://localhost:7049/Offer",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    success: function (data) {
+                       
+                        if (data == "200") {
+                            Swal.fire({
+                            icon: 'success',
+                                title: 'Successful!',
+                                    showConfirmButton: false,
+                                        timer: 1500
+                            });
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Something went wrong! Check the values you entered.'
+                               
+                            });
+                        }
+                    },
+                  
+                    error: function (error) {
+                        Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Something went wrong! Check the values you entered.'
+                               
+                            });
+                    },
+                    contentType: 'application/json',
+                    dataType: 'json'
+                   
+                });
+
+        }
+
+        $(document).ready(function () {
+
+
+
+
+            var cities = $("#select-cities");
+            $("#select-countries").change(function () {
+                SelectCountry();
+            });
+
+
+            function SelectCountry() {
+
+                let city = countries.find(x => x.id == $("#select-countries").val());
+                cities.html("");
+                for (let i = 0; i < city.cities.length; i++) {
+
+                    cities.append($("<option />").val(city.cities[i]).text(city.cities[i]));
+                }
+
+            }
+            SelectCountry();
+
+        });
+
+    </script>
+
+}
+
+    <div class="container ">
+        <div class="card ">
+            <div class="text-center mt-3">
+                <h1>Offer</h1>
+            </div>
+            <div class="row m-1">
+
+
+                <div class="col-md-6 col-lg-6 m-auto">
+                    <div class="card">
+                        <div class="card-header">
+
+                            <div class="col-auto align-self-center">
+                                <span class="form-help" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Mode Explanation Mode Explanation Mode Explanation Mode Explanation Mode Explanation Mode Explanation " data-bs-html="true">?</span>
+                            </div>
+                            <h3 class="card-title"> Mode</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+
+                                <div>
+                                    <label class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="LCL"
+                                           name="mode" checked>
+                                        <span class="form-check-label">LCL</span>
+                                    </label>
+                                    <label class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="FCL"
+                                           name="mode">
+                                        <span class="form-check-label">FCL</span>
+                                    </label>
+                                    <label class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="Air"
+                                           name="mode">
+                                        <span class="form-check-label">Air</span>
+                                    </label>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
+            <div class="row m-1">
+                <div class="col-md-6 col-lg-6 m-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="col-auto align-self-center">
+                                <span class="form-help" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Movement Type Movement Type Movement Type Movement Type Movement Type Movement Type " data-bs-html="true">?</span>
+                            </div>
+                            <h3 class="card-title">Movement Type</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3 ">
+
+                                <div>
+                                    <label class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="1"
+                                           name="movementType" checked>
+                                        <span class="form-check-label">Door to Door</span>
+                                    </label>
+                                    <label class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="2"
+                                           name="movementType">
+                                        <span class="form-check-label">Port to Door</span>
+                                    </label>
+                                    <label class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="3"
+                                           name="movementType">
+                                        <span class="form-check-label">Door to Port</span>
+                                    </label>  <label class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="4"
+                                           name="movementType">
+                                        <span class="form-check-label">Port to Port</span>
+                                    </label>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="row m-1">
+                <div class="col-md-6 col-lg-6 m-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="col-auto align-self-center">
+                                <span class="form-help" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Incoterm ExplanationIncoterm ExplanationIncoterm ExplanationIncoterm ExplanationIncoterm ExplanationIncoterm Explanation " data-bs-html="true">?</span>
+                            </div>
+                            <h3 class="card-title">Incoterm</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+
+                                <div>
+                                    <label class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="0"
+                                           name="incoterm" checked>
+                                        <span class="form-check-label">Delivered Duty Paid</span>
+                                    </label>
+                                    <label class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="1"
+                                           name="incoterm">
+                                        <span class="form-check-label">Delivered At Place</span>
+                                    </label>
+
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row m-1">
+                <div class="row m-1 col-md-6 col-lg-6 m-auto">
+
+                    <div class="col-md-6 col-lg-6 m-auto">
+
+                        <div class="mb-3">
+                            <div class="col-auto align-self-center">
+                                <span class="form-help" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Country Explanation Country Explanation Country Explanation Country Explanation Country Explanation Country Explanation " data-bs-html="true">?</span>
+                            </div>
+                            <label class="form-label">  Country</label>
+                            <select type="text" class="form-select" id="select-countries" value="" name="country">
+                                <option value="1" data-custom-properties="<span class='flag flag-xs flag-country-us'></span>">USA</option>
+                                <option value="2" data-custom-properties="<span class='flag flag-xs flag-country-cn'></span>">China</option>
+                                <option value="3" data-custom-properties="<span class='flag flag-xs flag-country-tr'></span>">Turkey</option>
+
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 col-lg-6 m-auto">
+
+                        <div class="mb-3">
+                            <div class="col-auto align-self-center">
+                                <span class="form-help" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="City Explanation " data-bs-html="true">?</span>
+                            </div>
+                            <label class="form-label">City</label>
+                            <select type="text" class="form-select mb-3" id="select-cities" value="" name="city">
+                            </select>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row m-1">
+                <div class="col-md-6 col-lg-6 m-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="col-auto align-self-center">
+                                <span class="form-help" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Mode Explanation Mode Explanation Mode Explanation Mode Explanation Mode Explanation Mode Explanation " data-bs-html="true">?</span>
+                            </div>
+                            <h3 class="card-title">Package Type</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+
+                                <div>
+                                    <label class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="Pallets"
+                                           name="packageType" checked>
+                                        <span class="form-check-label">Pallets</span>
+                                    </label>
+                                    <label class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="Boxes"
+                                           name="packageType">
+                                        <span class="form-check-label">Boxes</span>
+                                    </label>  <label class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" value="Cartons"
+                                           name="packageType">
+                                        <span class="form-check-label">Cartons</span>
+                                    </label>
+
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="row m-1">
+                <div class="row col-md-6 col-lg-6 m-auto">
+
+                    <div class="col-md-6 col-lg-6 m-auto">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="col-auto align-self-center">
+                                    <span class="form-help" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="unit 1  Explanation unit 1  Explanation unit 1  Explanation unit 1  Explanation unit 1  Explanation  " data-bs-html="true">?</span>
+                                </div>
+                                <h3 class="card-title">Unit-1</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+
+                                    <div>
+                                        <label class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" value="CM"
+                                               name="unit1" checked>
+                                            <span class="form-check-label">CM</span>
+                                        </label>
+                                        <label class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" value="IN"
+                                               name="unit1">
+                                            <span class="form-check-label">IN</span>
+                                        </label>
+
+
+                                    </div>
+                                    <input type="number" class="form-control" name="unit1value" step="0.001">
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 col-lg-6 m-auto">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="col-auto align-self-center">
+                                    <span class="form-help" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="unit 2  Explanation unit 2  Explanation unit 2 Explanation unit2  Explanation unit 2  Explanation  " data-bs-html="true">?</span>
+                                </div>
+                                <h3 class="card-title">Unit-2</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+
+                                    <div>
+                                        <label class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" value="KG"
+                                               name="unit2" checked>
+                                            <span class="form-check-label">KG</span>
+                                        </label>
+                                        <label class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" value="LB"
+                                               name="unit2">
+                                            <span class="form-check-label">LB</span>
+                                        </label>
+
+
+                                    </div>
+                                    <input type="number" class="form-control" name="unit2value" step="0.001">
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row m-1 mb-3">
+
+
+                <div class="col-md-6 col-lg-6 m-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="col-auto align-self-center">
+                                <span class="form-help" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Currency  Explanation Currency  Explanation Currency  Explanation Currency  Explanation  " data-bs-html="true">?</span>
+                            </div>
+                            <h3 class="card-title">Currency</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+
+                                <div class="input-group">
+                                    <select class="form-select" id="currency">
+                                        <option value="USD – US Dollar">USD – US Dollar</option>
+                                        <option value="CNY – Chinese Yuan">CNY – Chinese Yuan</option>
+                                        <option value="TRY – Turkish Lira">TRY – Turkish Lira</option>
+                                    </select>
+                                    <input type="number" class="form-control" name="price" placeholder="10.00" step="0.01">
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+            <div class="m-auto mb-4">
+                <a href="#" class="btn btn-primary  w-100" onclick="AddOffer()">
+                    Send Offer
+                </a>
+            </div>
+
+
+        </div>
+    </div>
+    @section Scripts{
+    <script src="~/tabler/libs/tom-select/dist/js/tom-select.base.min.js" defer></script>
+    <script src="~/tabler/js/tabler.min.js" defer></script>
+    <script src="~/tabler/js/demo.min.js" defer></script>
+
+
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var el;
+            window.TomSelect && (new TomSelect(el = document.getElementById('select-countries'), {
+                copyClassesToDropdown: false,
+                dropdownClass: 'dropdown-menu ts-dropdown',
+                optionClass: 'dropdown-item',
+                controlInput: '<input>',
+                render: {
+                    item: function (data, escape) {
+                        if (data.customProperties) {
+                            return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.text) + '</div>';
+                        }
+                        return '<div>' + escape(data.text) + '</div>';
+                    },
+                    option: function (data, escape) {
+                        if (data.customProperties) {
+                            return '<div><span class="dropdown-item-indicator">' + data.customProperties + '</span>' + escape(data.text) + '</div>';
+                        }
+                        return '<div>' + escape(data.text) + '</div>';
+                    },
+                },
+            }));
+        });
+
+    </script>
+
+
+}
